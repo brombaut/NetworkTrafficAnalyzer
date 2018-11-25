@@ -1,8 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class NetworkTrafficAnalyzer {
+  ConnectionsArrayList cal = new ConnectionsArrayList();
+
+  int count = 0;
   public static void main(String[] args) {
     NetworkTrafficAnalyzer nta = new NetworkTrafficAnalyzer();
     nta.run(nta.getShellCommand());
@@ -27,7 +31,13 @@ public class NetworkTrafficAnalyzer {
         String destPort = destIpPort.substring(destIpPort.lastIndexOf(".")+1);
 
         Connection c = new Connection(time, pro, sourceIp, destIp, sourcePort, destPort);
-        c.printConnectionInformation();
+        cal.addConnection(c);
+        //c.printConnectionInformation();
+        count++;
+        if(count > 100) {
+          cal.printAllConnections();
+          System.exit(0);
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
