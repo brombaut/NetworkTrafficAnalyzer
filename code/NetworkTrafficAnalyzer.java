@@ -29,12 +29,17 @@ public class NetworkTrafficAnalyzer {
         String destIpPort = splitLine[4];
         String destIp = destIpPort.substring(0, destIpPort.lastIndexOf("."));
         String destPort = destIpPort.substring(destIpPort.lastIndexOf(".")+1);
+        destPort = destPort.substring(0, destPort.length()-1);
 
         Connection c = new Connection(time, pro, sourceIp, destIp, sourcePort, destPort);
-        cal.addConnection(c);
-        //c.printConnectionInformation();
+        int connIndex = cal.checkIfOpenConnectionExists(c);
+        if (connIndex > 0) {
+          cal.setConnectionIndexResponded(connIndex);
+        } else {
+          cal.addConnection(c);
+        }
         count++;
-        if(count > 100) {
+        if(count > 20) {
           cal.printAllConnections();
           System.exit(0);
         }
