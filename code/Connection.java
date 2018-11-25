@@ -1,18 +1,18 @@
 public class Connection {
   String time;
+  String protocol;
   String sourceIP;
   String destIP;
   String sourcePort;
   String destPort;
-  String protocol;
 
-  public Connection(String timeIn, String sourceIPIn, String destIPIn, String sourcePortIn, String destPortIn, String protocolIn) {
+  public Connection(String timeIn, String protocolIn, String sourceIPIn, String destIPIn, String sourcePortIn, String destPortIn) {
     time = timeIn;
+    protocol = protocolIn;
     sourceIP = sourceIPIn;
     destIP = destIPIn;
     sourcePort = sourcePortIn;
     destPort = destPortIn;
-    protocol = protocolIn;
   }
 
   public void printConnectionInformation() {

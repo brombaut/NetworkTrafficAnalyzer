@@ -20,9 +20,14 @@ public class NetworkTrafficAnalyzer {
         String time = splitLine[0];
         String pro = splitLine[1];
         String sourceIpPort = splitLine[2];
+        String sourceIp = sourceIpPort.substring(0, sourceIpPort.lastIndexOf("."));
+        String sourcePort = sourceIpPort.substring(sourceIpPort.lastIndexOf(".")+1);
         String destIpPort = splitLine[4];
+        String destIp = destIpPort.substring(0, destIpPort.lastIndexOf("."));
+        String destPort = destIpPort.substring(destIpPort.lastIndexOf(".")+1);
 
-        //Connection c = new Connection();
+        Connection c = new Connection(time, pro, sourceIp, destIp, sourcePort, destPort);
+        c.printConnectionInformation();
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -39,7 +44,7 @@ public class NetworkTrafficAnalyzer {
     String[] shellCommand = new String[] {
             "/bin/bash",
             "-c",
-            "tcpdump -nn tcp",
+            "sudo tcpdump -nn tcp",
     };
     return shellCommand;
   }
