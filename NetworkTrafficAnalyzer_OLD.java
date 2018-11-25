@@ -2,11 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main {
+public class NetworkTrafficAnalyzer {
     public static void main(String[] args) {
         Process proc = null;
-
-        NetworkTrafficAnalyzer nta = new NetworkTrafficAnalyzer();
+        int count = 0;
 
         // tcpdump -s 0 == Capture all bytes of data within the packet
         // tcpdump -s 500 == Capture 500 bytes of data for each packet rather than the default of 68 bytes
@@ -32,8 +31,8 @@ public class Main {
                 String pro = splitLine[1];
                 String sourceIpPort = splitLine[2];
                 String destIpPort = splitLine[4];
-                System.out.println("----- TIME -----  |  ----- Src  -----  |  ----- Dest -----  ");
-                System.out.println(" " + time + "    " + sourceIpPort + "    " + destIpPort);
+                System.out.println("    ----- TIME -----  |  ----- Src  -----  |  ----- Dest -----  ");
+                System.out.println(" [" + count++ + "]  " + time + "    " + sourceIpPort + "    " + destIpPort);
             }
 
         } catch (IOException e) {
