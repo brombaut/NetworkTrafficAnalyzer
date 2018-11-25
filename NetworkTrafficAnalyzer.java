@@ -2,9 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main {
+public class NetworkTrafficAnalyzer {
     public static void main(String[] args) {
         Process proc = null;
+        int count = 0;
 
         NetworkTrafficAnalyzer nta = new NetworkTrafficAnalyzer();
 
@@ -32,8 +33,8 @@ public class Main {
                 String pro = splitLine[1];
                 String sourceIpPort = splitLine[2];
                 String destIpPort = splitLine[4];
-                System.out.println("----- TIME -----  |  ----- Src  -----  |  ----- Dest -----  ");
-                System.out.println(" " + time + "    " + sourceIpPort + "    " + destIpPort);
+                System.out.println("    ----- TIME -----  |  ----- Src  -----  |  ----- Dest -----  ");
+                System.out.println(" [" + count++ + "]  " + time + "    " + sourceIpPort + "    " + destIpPort);
             }
 
         } catch (IOException e) {
