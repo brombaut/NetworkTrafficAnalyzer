@@ -22,8 +22,8 @@ public class ConnectionsArrayList{
     for(int i=0; i<connections.size(); i++){
       Connection cTemp = connections.get(i);
       if (!cTemp.getHasBeenResponded() && checkIfResponse(c, cTemp)) {
-        System.out.print("FOUND: ");
-        c.printConnectionInformation();
+        // System.out.print("FOUND: ");
+        // c.printConnectionInformation();
         return i;
       }
     }
