@@ -45,9 +45,7 @@ public class ConnectionsArrayList{
   }
 
   public void removeOldConnections() {
-    System.out.println("RUNNING CLEAN: " + connections.size());
     long currTime = System.currentTimeMillis() / 1000;
     connections.removeIf(c -> currTime - c.getTimeSecondsInt() > 60);
-    System.out.println("NEW SIZE: " + connections.size());
   }
 }
