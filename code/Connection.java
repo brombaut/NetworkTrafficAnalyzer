@@ -31,6 +31,11 @@ public abstract class Connection {
     return time;
   }
 
+  public int getTimeSecondsInt() {
+    String secString = time.substring(0, time.indexOf("."));
+    return Integer.parseInt(secString);
+  }
+
   public String getProtocolMain() {
     return protocolMain;
   }
