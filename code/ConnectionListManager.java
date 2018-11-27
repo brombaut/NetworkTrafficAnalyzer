@@ -1,9 +1,26 @@
+import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class ConnectionListManager{
 
   ConnectionsArrayList cal;
 
   public ConnectionListManager() {
     cal = new ConnectionsArrayList();
+    cleanListRunnable();
+  }
+
+  public void cleanListRunnable() {
+    Runnable cleanRunnable = new Runnable() {
+      public void run() {
+        cal.removeOldConnections();
+      }
+    };
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    executor.scheduleAtFixedRate(cleanRunnable, 0, 10, TimeUnit.SECONDS);
   }
 
   public void handleNewConnectionLine(Connection c) {
@@ -19,8 +36,6 @@ public class ConnectionListManager{
     for(int i=0; i<cal.getConnectionsList().size(); i++){
       Connection cTemp = cal.getConnectionsList().get(i);
       if (!cTemp.getHasBeenResponded() && checkIfResponse(c, cTemp)) {
-        // System.out.print("FOUND: ");
-        // c.printConnectionInformation();
         return i;
       }
     }
@@ -43,6 +58,22 @@ public class ConnectionListManager{
       default:
         cal.printAllConnections();
     }
+  }
+
+  public void printNumberOfOpenConnectionsForProtocolInPastSeconds(String protocolIn, int seconds) {
+    ArrayList<Connection> subProcCons= cal.getConnectionsListBySubProtocol(protocolIn);
+    int count = 0;
+    for (int i=0; i<subProcCons.size(); i++) {
+      if (!subProcCons.get(i).getHasBeenResponded()) {
+        long currTime = System.currentTimeMillis() / 1000;
+        int connTime = subProcCons.get(i).getTimeSecondsInt();
+        //System.out.println("currTime:" + currTime + " connTime:" + connTime);
+        if(currTime - seconds - connTime < 0) {
+          count++;
+        }
+      }
+    }
+    System.out.println("Number of Open " + protocolIn + " Connections in Past " + seconds + " Seconds: " + count);
   }
 
 
