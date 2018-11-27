@@ -1,15 +1,25 @@
-public class Connection {
-  String time;
-  String protocol;
-  String sourceIP;
-  String destIP;
-  String sourcePort;
-  String destPort;
-  boolean hasBeenResponded;
+public abstract class Connection {
+  private String time;
+  private String protocolMain;
+  private String protocolSub;
+  private String sourceIP;
+  private String destIP;
+  private String sourcePort;
+  private String destPort;
+  private boolean hasBeenResponded;
 
-  public Connection(String timeIn, String protocolIn, String sourceIPIn, String destIPIn, String sourcePortIn, String destPortIn) {
+  public Connection(
+    String timeIn,
+    String protocolMainIn,
+    String protocolSubIn,
+    String sourceIPIn,
+    String destIPIn,
+    String sourcePortIn,
+    String destPortIn
+  ) {
     time = timeIn;
-    protocol = protocolIn;
+    protocolMain = protocolMainIn;
+    protocolSub = protocolSubIn;
     sourceIP = sourceIPIn;
     destIP = destIPIn;
     sourcePort = sourcePortIn;
@@ -17,17 +27,16 @@ public class Connection {
     hasBeenResponded = false;
   }
 
-  public void printConnectionInformation() {
-    String respString = hasBeenResponded ? "Responded" : "Not Responded";
-    System.out.println("Time:" + time + "\tProtocol:" + protocol + "\t Source:" + sourceIP + ":" + sourcePort + " \tDest:" + destIP + ":" + destPort + " " + respString);
-  }
-
   public String getTime() {
     return time;
   }
 
-  public String getProtocol() {
-    return protocol;
+  public String getProtocolMain() {
+    return protocolMain;
+  }
+
+  public String getProtocolSub() {
+    return protocolSub;
   }
 
   public String getSourceIp() {
@@ -53,5 +62,6 @@ public class Connection {
   public void setHasBeenResponded(boolean val) {
     hasBeenResponded = val;
   }
+  public abstract void printConnectionInformation();
 
 }

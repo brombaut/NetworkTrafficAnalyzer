@@ -18,6 +18,14 @@ public class ConnectionsArrayList{
     }
   }
 
+  public void printTcpConnection() {
+    for (int i=0; i<connections.size(); i++) {
+      if (connections.get(i).getProtocolSub().equals("TCP")) {
+        connections.get(i).printConnectionInformation();
+      }
+    }
+  }
+
   public int checkIfOpenConnectionExists(Connection c) {
     for(int i=0; i<connections.size(); i++){
       Connection cTemp = connections.get(i);

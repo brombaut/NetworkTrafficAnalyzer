@@ -20,28 +20,47 @@ public class NetworkTrafficAnalyzer {
       BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
       String line;
       while((line = in.readLine()) != null){
-        String[] splitLine = line.split(" ");
-        String time = splitLine[0];
-        String pro = splitLine[1];
-        String sourceIpPort = splitLine[2];
-        String sourceIp = sourceIpPort.substring(0, sourceIpPort.lastIndexOf("."));
-        String sourcePort = sourceIpPort.substring(sourceIpPort.lastIndexOf(".")+1);
-        String destIpPort = splitLine[4];
-        String destIp = destIpPort.substring(0, destIpPort.lastIndexOf("."));
-        String destPort = destIpPort.substring(destIpPort.lastIndexOf(".")+1);
-        destPort = destPort.substring(0, destPort.length()-1);
-
-        Connection c = new Connection(time, pro, sourceIp, destIp, sourcePort, destPort);
-        int connIndex = cal.checkIfOpenConnectionExists(c);
-        if (connIndex > 0) {
-          cal.setConnectionIndexResponded(connIndex);
-        } else {
-          cal.addConnection(c);
+        Connection c = null;
+        String time, protocolMain, sourceIpPort, sourceIp, sourcePort, destIpPort, destIp, destPort;
+        String[] splitTcpDumpLine = line.split(" ");
+        time = splitTcpDumpLine[0];
+        protocolMain = splitTcpDumpLine[1];
+        if (protocolMain.equals("IP")) {
+          sourceIpPort = splitTcpDumpLine[2];
+          sourceIp = sourceIpPort.substring(0, sourceIpPort.lastIndexOf("."));
+          sourcePort = sourceIpPort.substring(sourceIpPort.lastIndexOf(".")+1);
+          destIpPort = splitTcpDumpLine[4];
+          destIp = destIpPort.substring(0, destIpPort.lastIndexOf("."));
+          destPort = destIpPort.substring(destIpPort.lastIndexOf(".")+1);
+          destPort = destPort.substring(0, destPort.length()-1);
+          boolean isUDP = false;
+          boolean isTCP = false;
+          for (String  splitTcpDumpLinValue: splitTcpDumpLine) {
+            isUDP = splitTcpDumpLinValue.contains("UDP");
+            isTCP = splitTcpDumpLinValue.contains("Flags");
+            if (isUDP || isTCP) {
+              break;
+            }
+          }
+          if (isUDP) {
+            c = new ConnectionUDP(time, protocolMain, "UDP", sourceIp, destIp, sourcePort, destPort);
+          }
+          if (isTCP) {
+            c = new ConnectionTCP(time, protocolMain, "TCP", sourceIp, destIp, sourcePort, destPort);
+          }
         }
-        count++;
-        if(count > 20) {
-          cal.printAllConnections();
-          System.exit(0);
+        if (c != null) {
+          int connIndex = cal.checkIfOpenConnectionExists(c);
+          if (connIndex > 0) {
+            cal.setConnectionIndexResponded(connIndex);
+          } else {
+            cal.addConnection(c);
+          }
+          count++;
+          if(count > 200) {
+            cal.printTcpConnection();
+            System.exit(0);
+          }
         }
       }
     } catch (IOException e) {
@@ -56,10 +75,11 @@ public class NetworkTrafficAnalyzer {
     // tcpdump -B 524288
     // tcpdump tcp == Capture only TCP packets
     // tcpdump udp == Capture only UDP packets
+    // tcpdump -tt == Print the timestamp, as seconds since January 1, 1970, 00:00:00, UTC, and fractions of a second since that time, on each dump line.
     String[] shellCommand = new String[] {
             "/bin/bash",
             "-c",
-            "sudo tcpdump -nn tcp",
+            "sudo tcpdump -nn -tt",
     };
     return shellCommand;
   }
