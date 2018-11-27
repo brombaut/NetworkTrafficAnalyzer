@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class NetworkTrafficAnalyzer {
   ConnectionBuilder cb = new ConnectionBuilder();
-  ConnectionsArrayList cal = new ConnectionsArrayList();
+  ConnectionListManager clm = new ConnectionListManager();
 
   int count = 0;
   public static void main(String[] args) {
@@ -23,15 +23,10 @@ public class NetworkTrafficAnalyzer {
       while((line = in.readLine()) != null){
         Connection c = cb.buildConnection(line);
         if (c != null) {
-          int connIndex = cal.checkIfOpenConnectionExists(c);
-          if (connIndex > 0) {
-            cal.setConnectionIndexResponded(connIndex);
-          } else {
-            cal.addConnection(c);
-          }
+          clm.handleNewConnectionLine(c);
           count++;
           if(count > 100) {
-            cal.printTcpConnection();
+            clm.printConnectionsForProtocol("TCP");
             System.exit(0);
           }
         }
@@ -44,11 +39,13 @@ public class NetworkTrafficAnalyzer {
   public String[] getShellCommand() {
     // tcpdump -s 0 == Capture all bytes of data within the packet
     // tcpdump -s 500 == Capture 500 bytes of data for each packet rather than the default of 68 bytes
-    // tcpdump -n == Display IP addresses and port numbers instead of domain and service names when capturing packets (note: on some systems you need to specify -nn to display port numbers)
+    // tcpdump -n == Display IP addresses and port numbers instead of domain and service names
+    //               when capturing packets (note: on some systems you need to specify -nn to display port numbers)
     // tcpdump -B 524288
     // tcpdump tcp == Capture only TCP packets
     // tcpdump udp == Capture only UDP packets
-    // tcpdump -tt == Print the timestamp, as seconds since January 1, 1970, 00:00:00, UTC, and fractions of a second since that time, on each dump line.
+    // tcpdump -tt == Print the timestamp, as seconds since January 1, 1970, 00:00:00, UTC,
+    //                and fractions of a second since that time, on each dump line.
     String[] shellCommand = new String[] {
             "/bin/bash",
             "-c",
