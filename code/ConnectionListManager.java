@@ -18,9 +18,8 @@ public class ConnectionListManager{
         cal.removeOldConnections();
       }
     };
-
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(cleanRunnable, 0, 10, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(cleanRunnable, 30, 30, TimeUnit.SECONDS);
   }
 
   public void handleNewConnectionLine(Connection c) {
@@ -67,7 +66,6 @@ public class ConnectionListManager{
       if (!subProcCons.get(i).getHasBeenResponded()) {
         long currTime = System.currentTimeMillis() / 1000;
         int connTime = subProcCons.get(i).getTimeSecondsInt();
-        //System.out.println("currTime:" + currTime + " connTime:" + connTime);
         if(currTime - seconds - connTime < 0) {
           count++;
         }

@@ -42,7 +42,7 @@ public class NetworkTrafficAnalyzer {
     };
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(printRunnable, 0, 3, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(printRunnable, 5, 5, TimeUnit.SECONDS);
   }
 
   public String[] getShellCommand() {
