@@ -1,5 +1,7 @@
 public class ConnectionTCP extends Connection {
 
+  String flagStatus;
+
   public ConnectionTCP(
     String timeIn,
     String protocolMainIn,
@@ -7,9 +9,19 @@ public class ConnectionTCP extends Connection {
     String sourceIPIn,
     String destIPIn,
     String sourcePortIn,
-    String destPortIn
+    String destPortIn,
+    String flagStatusIn
   ) {
     super(timeIn, protocolMainIn, protocolSubIn, sourceIPIn, destIPIn, sourcePortIn, destPortIn);
+    flagStatus = flagStatusIn;
+  }
+
+  public String getFlagStatus() {
+    return flagStatus;
+  }
+
+  public void setFlagStatus(String flagStatusIn) {
+    flagStatus = flagStatusIn;
   }
 
   public void printConnectionInformation() {
@@ -19,7 +31,7 @@ public class ConnectionTCP extends Connection {
       " " + getProtocolSub() + " " +
       "\t" + getSourceIp() + "\t:" + getSourcePort() + " " +
       "\t" + getDestIp() + "\t:" + getDestPort() + " " +
-      "\t" + respString);
+      "\t" + flagStatus);
     /*
     System.out.println("Time:" + getTime() + " " +
       "\tProtocol:" + getProtocolMain() + " " +

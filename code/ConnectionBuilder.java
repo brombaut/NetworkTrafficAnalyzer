@@ -5,6 +5,9 @@ public class ConnectionBuilder{
   public Connection buildConnection(String tcpLine) {
     String time, protocolMain, sourceIpPort, sourceIp, sourcePort, destIpPort, destIp, destPort;
     String[] splitTcpDumpLine = tcpLine.split(" ");
+    if(splitTcpDumpLine.length < 2) {
+      return null;
+    }
     time = splitTcpDumpLine[0];
     protocolMain = splitTcpDumpLine[1];
     if (protocolMain.equals("IP")) {
@@ -25,10 +28,12 @@ public class ConnectionBuilder{
         }
       }
       if (isUDP) {
-        return new ConnectionUDP(time, protocolMain, "UDP", sourceIp, destIp, sourcePort, destPort);
+        //return new ConnectionUDP(time, protocolMain, "UDP", sourceIp, destIp, sourcePort, destPort);
       }
       if (isTCP) {
-        return new ConnectionTCP(time, protocolMain, "TCP", sourceIp, destIp, sourcePort, destPort);
+        String rawFlagStatus = splitTcpDumpLine[6];
+        String flagStatus = rawFlagStatus.replace("[", "").replace("]", "").replace(",", "");
+        return new ConnectionTCP(time, protocolMain, "TCP", sourceIp, destIp, sourcePort, destPort, flagStatus);
       }
     }
     return null;

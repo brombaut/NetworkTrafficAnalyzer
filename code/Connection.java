@@ -69,4 +69,8 @@ public abstract class Connection {
   }
   public abstract void printConnectionInformation();
 
+  public String getFlagStatus() { return null; }
+
+  public void setFlagStatus(String flagStatusIn) { }
+
 }

@@ -6,10 +6,26 @@ import java.util.concurrent.TimeUnit;
 public class ConnectionListManager{
 
   ConnectionsArrayList cal;
+  ConnectionHashMapIP chm;
 
   public ConnectionListManager() {
     cal = new ConnectionsArrayList();
-    cleanListRunnable();
+    // cleanListRunnable();
+    // createOutputRunnable();
+    chm = new ConnectionHashMapIP();
+  }
+
+  public void createOutputRunnable() {
+    Runnable printRunnable = new Runnable() {
+      public void run() {
+        // clm.printNumberOfOpenConnectionsForProtocolInPastSeconds("TCP", 30);
+        printConnectionsForProtocol("TCP");
+        System.out.println("\n");
+      }
+    };
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    executor.scheduleAtFixedRate(printRunnable, 5, 5, TimeUnit.SECONDS);
   }
 
   public void cleanListRunnable() {
@@ -23,29 +39,42 @@ public class ConnectionListManager{
   }
 
   public void handleNewConnectionLine(Connection c) {
-    int connIndex = checkIfOpenConnectionExists(c);
-    if (connIndex > 0) {
-      cal.setConnectionIndexResponded(connIndex);
-    } else {
+    // System.out.print("NEW: ");
+    // c.printConnectionInformation();
+    String flagString = c.getFlagStatus();
+    if (flagString.equals("S")) {
       cal.addConnection(c);
+      // System.out.print("ADDING: ");
+      // c.printConnectionInformation();
+    } else if(flagString.equals("S.")) {
+      cal.setSynAck(c);
+      // System.out.print("SYNACK: ");
+      // c.printConnectionInformation();
+    } else if(flagString.contains("F") && flagString.contains(".")) {
+      cal.setFinishSynAck(c);
+      // System.out.print("FINACK: ");
+      // c.printConnectionInformation();
+    } else if(flagString.contains(".")) {
+      cal.handleAckFlag(c);
+      // System.out.print("ACK: ");
+      // c.printConnectionInformation();
+    } else {
+      cal.handleOtherFlags(c);
     }
+    // System.out.print("\033[H\033[2J");
+    // System.out.println("\n");
+    // System.out.print("CONN: ");
+    // c.printConnectionInformation();
+    // printConnectionsForProtocol("TCP");
+    printFullUpdate();
+
   }
 
-  public int checkIfOpenConnectionExists(Connection c) {
-    for(int i=0; i<cal.getConnectionsList().size(); i++){
-      Connection cTemp = cal.getConnectionsList().get(i);
-      if (!cTemp.getHasBeenResponded() && checkIfResponse(c, cTemp)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  public boolean checkIfResponse(Connection c1, Connection c2) {
-    return c1.getSourceIp().equals(c2.getDestIp())
-      && c1.getSourcePort().equals(c2.getDestPort())
-      && c1.getDestIp().equals(c2.getSourceIp())
-      && c1.getDestPort().equals(c2.getSourcePort());
+  public void printFullUpdate() {
+    System.out.print("\033[H\033[2J");
+    chm.resetHM();
+    chm.createHM(cal.getConnectionsListBySubProtocol("TCP"));
+    chm.printHMConnectionData();
   }
 
   public void printConnectionsForProtocol(String protocolIn) {

@@ -1,18 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class NetworkTrafficAnalyzer {
   ConnectionBuilder cb = new ConnectionBuilder();
   ConnectionListManager clm = new ConnectionListManager();
 
-  int count = 0;
   public static void main(String[] args) {
     NetworkTrafficAnalyzer nta = new NetworkTrafficAnalyzer();
-    nta.createOutputRunnable();
     nta.run(nta.getShellCommand());
   }
 
@@ -32,17 +27,6 @@ public class NetworkTrafficAnalyzer {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  public void createOutputRunnable() {
-    Runnable printRunnable = new Runnable() {
-      public void run() {
-        clm.printNumberOfOpenConnectionsForProtocolInPastSeconds("TCP", 30);
-      }
-    };
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(printRunnable, 5, 5, TimeUnit.SECONDS);
   }
 
   public String[] getShellCommand() {
