@@ -6,7 +6,6 @@ public abstract class Connection {
   private String destIP;
   private String sourcePort;
   private String destPort;
-  private boolean hasBeenResponded;
 
   public Connection(
     String timeIn,
@@ -24,7 +23,6 @@ public abstract class Connection {
     destIP = destIPIn;
     sourcePort = sourcePortIn;
     destPort = destPortIn;
-    hasBeenResponded = false;
   }
 
   public String getTime() {
@@ -64,13 +62,6 @@ public abstract class Connection {
     return destPort;
   }
 
-  public boolean getHasBeenResponded() {
-    return hasBeenResponded;
-  }
-
-  public void setHasBeenResponded(boolean val) {
-    hasBeenResponded = val;
-  }
   public abstract void printConnectionInformation();
 
   public String getFlagStatus() { return null; }

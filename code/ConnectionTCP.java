@@ -25,7 +25,6 @@ public class ConnectionTCP extends Connection {
   }
 
   public void printConnectionInformation() {
-    String respString = getHasBeenResponded() ? "Responded" : "Not Responded";
     System.out.println(getTime() + " " +
       " " + getProtocolMain() + " " +
       " " + getProtocolSub() + " " +
