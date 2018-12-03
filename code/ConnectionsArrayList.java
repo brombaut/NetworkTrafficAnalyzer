@@ -67,6 +67,10 @@ public class ConnectionsArrayList{
       if (checkIfRespondingConnection(c, connections.get(i))) {
         cTemp = connections.get(i);
         switch (cTemp.getFlagStatus()) {
+          case "S.":
+            connections.get(i).setFlagStatus("O");
+            connections.get(i).setTime(c.getTime());
+            break;
           case ("F."):
             connections.get(i).setFlagStatus("F");
             connections.get(i).setTime(c.getTime());
@@ -146,22 +150,8 @@ public class ConnectionsArrayList{
       && !(c2.getFlagStatus().equals("F") || c2.getFlagStatus().equals("R"));
   }
 
-  public void printAllConnections() {
-    for(int i=0; i<connections.size(); i++){
-      connections.get(i).printConnectionInformation();
-    }
-  }
-
-  public void printTcpConnection() {
-    for (int i=0; i<connections.size(); i++) {
-      if (connections.get(i).getProtocolSub().equals("TCP")) {
-        connections.get(i).printConnectionInformation();
-      }
-    }
-  }
-
   public void removeOldConnections() {
     long currTime = System.currentTimeMillis() / 1000;
-    connections.removeIf(c -> currTime - c.getTimeSecondsInt() > 60);
+    connections.removeIf(c -> currTime - c.getTimeSecondsInt() > 180);
   }
 }

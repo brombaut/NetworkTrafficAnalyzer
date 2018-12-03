@@ -10,7 +10,7 @@ public class ConnectionListManager{
 
   public ConnectionListManager() {
     cal = new ConnectionsArrayList();
-    // cleanListRunnable();
+    cleanListRunnable();
     createOutputRunnable();
     chm = new ConnectionHashMapIP();
   }
@@ -18,9 +18,6 @@ public class ConnectionListManager{
   public void createOutputRunnable() {
     Runnable printRunnable = new Runnable() {
       public void run() {
-        // clm.printNumberOfOpenConnectionsForProtocolInPastSeconds("TCP", 30);
-        // printConnectionsForProtocol("TCP");
-        // System.out.println("\n");
         printFullUpdate();
       }
     };
@@ -36,7 +33,7 @@ public class ConnectionListManager{
       }
     };
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(cleanRunnable, 30, 30, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(cleanRunnable, 180, 180, TimeUnit.SECONDS);
   }
 
   public void handleNewConnectionLine(Connection c) {
@@ -47,10 +44,10 @@ public class ConnectionListManager{
       cal.setSynAck(c);
     } else if(flagString.contains("F")) {
       cal.setFinishSynAck(c);
-    } else if(flagString.contains(".")) {
-      cal.handleAckFlag(c);
     } else if(flagString.contains("R")) {
       cal.handleResetFlag(c);
+    } else if(flagString.contains(".")) {
+      cal.handleAckFlag(c);
     } else {
       cal.handleOtherFlags(c);
     }
@@ -60,35 +57,8 @@ public class ConnectionListManager{
   public void printFullUpdate() {
     System.out.print("\033[H\033[2J");
     chm.resetHM();
-    chm.createHM(cal.getConnectionsListByProtocolInPastSeconds("TCP", 30));
+    chm.createHM(cal.getConnectionsListByProtocolInPastSeconds("TCP", 120));
     chm.printHMConnectionData();
   }
-
-  public void printConnectionsForProtocol(String protocolIn) {
-    switch (protocolIn) {
-      case ("TCP"): {
-        cal.printTcpConnection();
-        break;
-      }
-      default:
-        cal.printAllConnections();
-    }
-  }
-
-  public void printNumberOfOpenConnectionsForProtocolInPastSeconds(String protocolIn, int seconds) {
-    ArrayList<Connection> subProcCons= cal.getConnectionsListBySubProtocol(protocolIn);
-    int count = 0;
-    for (int i=0; i<subProcCons.size(); i++) {
-      if (!subProcCons.get(i).getHasBeenResponded()) {
-        long currTime = System.currentTimeMillis() / 1000;
-        int connTime = subProcCons.get(i).getTimeSecondsInt();
-        if(currTime - seconds - connTime < 0) {
-          count++;
-        }
-      }
-    }
-    System.out.println("Number of Open " + protocolIn + " Connections in Past " + seconds + " Seconds: " + count);
-  }
-
 
 }

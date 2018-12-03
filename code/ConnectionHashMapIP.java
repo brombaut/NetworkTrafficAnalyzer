@@ -22,14 +22,17 @@ public class ConnectionHashMapIP{
 
       if (cTemp.getFlagStatus().contains("S") || cTemp.getFlagStatus().contains("O")) {
         mHashMap.get(key).addOpen();
+        mHashMap.get(key).addConnectedSourcePort(cTemp.getSourcePort());
       }
 
       if (cTemp.getFlagStatus().contains("F")) {
         mHashMap.get(key).addClose();
+        mHashMap.get(key).addClosedSourcePort(cTemp.getSourcePort());
       }
 
       if (cTemp.getFlagStatus().contains("R")) {
         mHashMap.get(key).addFail();
+        mHashMap.get(key).addFailedSourcePort(cTemp.getSourcePort());
       }
 
     }
@@ -47,23 +50,38 @@ public class ConnectionHashMapIP{
     String restoreColorCode = "\033[31;44;0m";
     String addColorCode = "\033[31;44;1m";
     System.out.println();
-    System.out.println("      Client     ->    Server       OPEN  CLOSED FAILED");
+    System.out.printf("%18s -> %18s %8s %8s %8s %30s %30s %30s\n",
+      "Client",
+      "Server",
+      "OPEN",
+      "CLOSED",
+      "FAILED",
+      "CONNECTED PORTS",
+      "CLOSED PORTS",
+      "FAILED PORTS"
+    );
     mHashMap.forEach((key, connIPObj) -> {
-      if(connIPObj.getOpen() > 10) {
-        System.out.printf(addColorCode + "%-16s -> %-16s %-6s %-6s %-6s\n",
+      if(connIPObj.getOpen() > 10 || connIPObj.getFail() > 10) {
+        System.out.printf(addColorCode + "%18s -> %18s %8s %8s %8s %30s %30s %30s\n",
           connIPObj.getSource(),
           connIPObj.getDest(),
           connIPObj.getOpen(),
           connIPObj.getClose(),
-          connIPObj.getFail()
+          connIPObj.getFail(),
+          connIPObj.getConnectedSourcePorts(),
+          connIPObj.getClosedSourcePorts(),
+          connIPObj.getFailedSourcePorts()
         );
       } else {
-        System.out.printf(restoreColorCode + "%-16s -> %-16s %-6s %-6s %-6s\n",
+        System.out.printf(restoreColorCode + "%18s -> %18s %8s %8s %8s %30s %30s %30s\n",
           connIPObj.getSource(),
           connIPObj.getDest(),
           connIPObj.getOpen(),
           connIPObj.getClose(),
-          connIPObj.getFail()
+          connIPObj.getFail(),
+          connIPObj.getConnectedSourcePorts(),
+          connIPObj.getClosedSourcePorts(),
+          connIPObj.getFailedSourcePorts()
         );
       }
     });
