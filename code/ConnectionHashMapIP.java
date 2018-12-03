@@ -64,9 +64,7 @@ public class ConnectionHashMapIP{
       }
 
       if (mHashMap.get(key).getTime().compareTo(cTemp.getTime()) > 0) {
-
       }
-
     }
   }
 
@@ -229,7 +227,5 @@ public class ConnectionHashMapIP{
       );
     }
     System.out.printf(restoreColorCode);
-
   }
-
 }
