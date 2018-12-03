@@ -45,6 +45,7 @@ public class ConnectionsArrayList{
         connections.get(i).setFlagStatus("S.");
         connections.get(i).setTime(c.getTime());
       }
+      
     }
   }
 

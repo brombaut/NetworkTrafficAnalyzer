@@ -61,6 +61,45 @@ public class ConnectionHashMapIP{
       "FAILED PORTS"
     );
     mHashMap.forEach((key, connIPObj) -> {
+      String connectedPorts = "[";
+      for (int i=0; i<connIPObj.getConnectedSourcePorts().size(); i++) {
+        if (i > 5) {
+          connectedPorts += "...";
+          break;
+        }
+        connectedPorts += connIPObj.getConnectedSourcePorts().get(i);
+        if(i != connIPObj.getConnectedSourcePorts().size()-1) {
+          connectedPorts += ",";
+        }
+      }
+      connectedPorts += "]";
+
+      String closedPorts = "[";
+      for (int i=0; i<connIPObj.getClosedSourcePorts().size(); i++) {
+        if (i > 5) {
+          closedPorts += "...";
+          break;
+        }
+        closedPorts += connIPObj.getClosedSourcePorts().get(i);
+        if(i != connIPObj.getClosedSourcePorts().size()-1) {
+          closedPorts += ",";
+        }
+      }
+      closedPorts += "]";
+
+      String failedPorts = "[";
+      for (int i=0; i<connIPObj.getFailedSourcePorts().size(); i++) {
+        if (i > 5) {
+          failedPorts += "...";
+          break;
+        }
+        failedPorts += connIPObj.getFailedSourcePorts().get(i);
+        if(i != connIPObj.getFailedSourcePorts().size()-1) {
+          failedPorts += ",";
+        }
+      }
+      failedPorts += "]";
+
       if(connIPObj.getOpen() > 10 || connIPObj.getFail() > 10) {
         System.out.printf(addColorCode + "%18s -> %18s %8s %8s %8s %30s %30s %30s\n",
           connIPObj.getSource(),
@@ -68,9 +107,9 @@ public class ConnectionHashMapIP{
           connIPObj.getOpen(),
           connIPObj.getClose(),
           connIPObj.getFail(),
-          connIPObj.getConnectedSourcePorts(),
-          connIPObj.getClosedSourcePorts(),
-          connIPObj.getFailedSourcePorts()
+          connectedPorts,
+          closedPorts,
+          failedPorts
         );
       } else {
         System.out.printf(restoreColorCode + "%18s -> %18s %8s %8s %8s %30s %30s %30s\n",
@@ -79,9 +118,9 @@ public class ConnectionHashMapIP{
           connIPObj.getOpen(),
           connIPObj.getClose(),
           connIPObj.getFail(),
-          connIPObj.getConnectedSourcePorts(),
-          connIPObj.getClosedSourcePorts(),
-          connIPObj.getFailedSourcePorts()
+          connectedPorts,
+          closedPorts,
+          failedPorts
         );
       }
     });
