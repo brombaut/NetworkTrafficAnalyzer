@@ -32,13 +32,5 @@ public class ConnectionTCP extends Connection {
       "\t" + getSourceIp() + "\t:" + getSourcePort() + " " +
       "\t" + getDestIp() + "\t:" + getDestPort() + " " +
       "\t" + flagStatus);
-    /*
-    System.out.println("Time:" + getTime() + " " +
-      "\tProtocol:" + getProtocolMain() + " " +
-      "\tSub:" + getProtocolSub() + " " +
-      "\tSource:" + getSourceIp() + "\t:" + getSourcePort() + " " +
-      "\tDest:" + getDestIp() + "\t:" + getDestPort() + " " +
-      "\t" + respString);
-    */
   }
 }

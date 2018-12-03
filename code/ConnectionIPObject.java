@@ -1,9 +1,10 @@
 public class ConnectionIPObject{
-  int open, close;
+  int open, close, fail;
   String source, dest;
   public ConnectionIPObject(String sourceIn, String destIn) {
     open = 0;
     close = 0;
+    fail = 0;
     source = sourceIn;
     dest = destIn;
   }
@@ -13,8 +14,11 @@ public class ConnectionIPObject{
   }
 
   public void addClose() {
-    // open--;
     close++;
+  }
+
+  public void addFail() {
+    fail++;
   }
 
   public int getOpen() {
@@ -23,6 +27,10 @@ public class ConnectionIPObject{
 
   public int getClose() {
     return close;
+  }
+
+  public int getFail() {
+    return fail;
   }
 
   public String getSource() {

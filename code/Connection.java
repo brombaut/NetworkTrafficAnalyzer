@@ -31,6 +31,10 @@ public abstract class Connection {
     return time;
   }
 
+  public void setTime(String timeIn) {
+    time = timeIn;
+  }
+
   public int getTimeSecondsInt() {
     String secString = time.substring(0, time.indexOf("."));
     return Integer.parseInt(secString);

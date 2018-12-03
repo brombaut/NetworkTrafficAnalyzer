@@ -11,7 +11,7 @@ public class ConnectionListManager{
   public ConnectionListManager() {
     cal = new ConnectionsArrayList();
     // cleanListRunnable();
-    // createOutputRunnable();
+    createOutputRunnable();
     chm = new ConnectionHashMapIP();
   }
 
@@ -19,13 +19,14 @@ public class ConnectionListManager{
     Runnable printRunnable = new Runnable() {
       public void run() {
         // clm.printNumberOfOpenConnectionsForProtocolInPastSeconds("TCP", 30);
-        printConnectionsForProtocol("TCP");
-        System.out.println("\n");
+        // printConnectionsForProtocol("TCP");
+        // System.out.println("\n");
+        printFullUpdate();
       }
     };
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(printRunnable, 5, 5, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(printRunnable, 1, 1, TimeUnit.SECONDS);
   }
 
   public void cleanListRunnable() {
@@ -39,41 +40,27 @@ public class ConnectionListManager{
   }
 
   public void handleNewConnectionLine(Connection c) {
-    // System.out.print("NEW: ");
-    // c.printConnectionInformation();
     String flagString = c.getFlagStatus();
     if (flagString.equals("S")) {
       cal.addConnection(c);
-      // System.out.print("ADDING: ");
-      // c.printConnectionInformation();
     } else if(flagString.equals("S.")) {
       cal.setSynAck(c);
-      // System.out.print("SYNACK: ");
-      // c.printConnectionInformation();
-    } else if(flagString.contains("F") && flagString.contains(".")) {
+    } else if(flagString.contains("F")) {
       cal.setFinishSynAck(c);
-      // System.out.print("FINACK: ");
-      // c.printConnectionInformation();
     } else if(flagString.contains(".")) {
       cal.handleAckFlag(c);
-      // System.out.print("ACK: ");
-      // c.printConnectionInformation();
+    } else if(flagString.contains("R")) {
+      cal.handleResetFlag(c);
     } else {
       cal.handleOtherFlags(c);
     }
-    // System.out.print("\033[H\033[2J");
-    // System.out.println("\n");
-    // System.out.print("CONN: ");
-    // c.printConnectionInformation();
-    // printConnectionsForProtocol("TCP");
-    printFullUpdate();
 
   }
 
   public void printFullUpdate() {
     System.out.print("\033[H\033[2J");
     chm.resetHM();
-    chm.createHM(cal.getConnectionsListBySubProtocol("TCP"));
+    chm.createHM(cal.getConnectionsListByProtocolInPastSeconds("TCP", 30));
     chm.printHMConnectionData();
   }
 
