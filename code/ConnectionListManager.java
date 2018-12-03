@@ -51,13 +51,12 @@ public class ConnectionListManager{
     } else {
       cal.handleOtherFlags(c);
     }
-
   }
 
   public void printFullUpdate() {
     System.out.print("\033[H\033[2J");
     chm.resetHM();
-    chm.createHM(cal.getConnectionsListByProtocolInPastSeconds("TCP", 120));
+    chm.createHM(cal.getConnectionsListByProtocolInPastSeconds("TCP", 60));
     chm.printHMConnectionData();
   }
 

@@ -16,7 +16,11 @@ public class NetworkTrafficAnalyzer {
     try {
       System.out.println("Starting...\n");
       proc = new ProcessBuilder(command).start();
-      BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      BufferedReader in = new BufferedReader(
+        new InputStreamReader(
+          proc.getInputStream()
+        )
+      );
       String line;
       while((line = in.readLine()) != null){
         Connection c = cb.buildConnection(line);
