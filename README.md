@@ -10,4 +10,11 @@ Features:
   - Average number of open connections per second over the past minute.
   - Average number of failed connections persecond over the past minute.
 
+### System during regular browser usage
+![Regular Browser Usage](photos/terminalOutput.png?raw=true "Regular Browser Usage")
+
+
+### System during a slowloris attack
+![Slow loris Attack](photos/slowloris_attack.png?raw=true "Slowloris Attack")
+
 System will display warnings for any client IP's that is suspicious (activity rises above thresholds).
